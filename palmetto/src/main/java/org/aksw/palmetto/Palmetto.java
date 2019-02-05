@@ -19,7 +19,7 @@ package org.aksw.palmetto;
 
 import java.io.PrintStream;
 import java.util.Arrays;
-
+import java.io.*;
 import org.aksw.palmetto.aggregation.ArithmeticMean;
 import org.aksw.palmetto.calculations.direct.FitelsonConfirmationMeasure;
 import org.aksw.palmetto.calculations.direct.LogCondProbConfirmationMeasure;
@@ -77,7 +77,7 @@ public class Palmetto {
         double coherences[] = coherence.calculateCoherences(wordsets);
         corpusAdapter.close();
 
-        printCoherences(coherences, wordsets, System.out);
+        printCoherences(coherences, wordsets, calcType, indexPath);
     }
 
     public static CorpusAdapter getCorpusAdapter(String calcType, String indexPath) {
@@ -156,9 +156,15 @@ public class Palmetto {
         return probEstimator;
     }
 
-    public static void printCoherences(double[] coherences, String[][] wordsets, PrintStream out) {
-        for (int i = 0; i < wordsets.length; i++) {
-            out.format("%5d\t%3.5f\t%s%n", new Object[] { i, coherences[i], Arrays.toString(wordsets[i]) });
-        }
+    public static void printCoherences(double[] coherences, String[][] wordsets, String calcType,String indexpath) {
+        try{
+		BufferedWriter writer = new BufferedWriter(new FileWriter(indexPath+"/coherence_score_"+calcType+".txt"));
+
+	for (int i = 0; i < wordsets.length; i++) {
+            	String output = i+","+coherences[i];
+		writer.write(output+"\n");
+		}		
+		writer.close();
+        }catch(Exception e){}
     }
 }
